@@ -2,6 +2,7 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import { castVote, getAll } from './services/requests'
+import { useNoteDispatch } from './NotificationContext'
 
 const App = () => {
   const result = useQuery({
@@ -19,14 +20,17 @@ const App = () => {
         anecdote.id === updatedAnec.id ? updatedAnec : anecdote))
     }
   })
+  
+  const dispatch = useNoteDispatch()
 
   const handleVote = (anecdote) => {
-    console.log('vote', anecdote)
     const updatedAnecdote = {
       ...anecdote,
       votes : anecdote.votes + 1
     }
     updateMutation.mutate(updatedAnecdote)
+    dispatch({type: 'VOTE', payload: anecdote.content})
+    setTimeout(() => dispatch({type: 'NULL'}), 3000)
   }
 
   let anecdotes = [
@@ -36,6 +40,7 @@ const App = () => {
       "votes": 0
     },
   ]
+
 
   if (result.isLoading)
     return <div>Data is Loading...</div>
