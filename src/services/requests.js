@@ -5,3 +5,8 @@ export const getAll = async () => {
     const res = await axios.get(baseURL)
     return res.data
 }
+
+export const createNew = async obj => {
+    const res = await axios.post(baseURL, obj)
+    return res.data
+}
