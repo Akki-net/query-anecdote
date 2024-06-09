@@ -4,15 +4,19 @@ import { useNoteDispatch } from "../NotificationContext"
 
 const AnecdoteForm = () => {
   const queryClient = useQueryClient()
+  const dispatch = useNoteDispatch()
   const addMutation = useMutation({
     mutationFn: createNew,
     onSuccess: (newAnec) => {
       const anecdotes = queryClient.getQueryData(['anecdotes'])
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnec))
+      dispatch({ type: 'ADD', payload: content })
+    },
+    onError: err => {
+      dispatch({ type: 'ERR', payload: err.response.data.error })
     }
   })
-  
-  const dispatch = useNoteDispatch()
+
 
   const onCreate = (event) => {
     event.preventDefault()
@@ -23,9 +27,8 @@ const AnecdoteForm = () => {
       votes: 0
     }
     addMutation.mutate(newObj)
+    setTimeout(() => dispatch({ type: 'NULL' }), 3000)
     event.target.anecdote.value = ''
-    dispatch({type: 'ADD', payload: content})
-    setTimeout(() => dispatch({type: 'NULL'}), 3000)
   }
 
   return (
