@@ -10,3 +10,8 @@ export const createNew = async obj => {
     const res = await axios.post(baseURL, obj)
     return res.data
 }
+
+export const castVote = async obj => {
+    const res = await axios.put(`${baseURL}/${obj.id}`, obj)
+    return res.data
+}
